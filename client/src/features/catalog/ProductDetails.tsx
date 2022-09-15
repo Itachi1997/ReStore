@@ -20,7 +20,7 @@ export default function ProductDetails() {
 
     if (loading) return <h3>Loading...</h3>
 
-    if (!product) return <h3>Product Not F  ound</h3>
+    if (!product) return <h3>Product Not Found</h3>
 
     return (
         <Grid container spacing={6}>
