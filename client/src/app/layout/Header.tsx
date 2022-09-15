@@ -1,53 +1,78 @@
-import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
-import AboutPage from "../../features/about/AboutPage";
-import Catalog from "../../features/catalog/Catalog";
-import ProductDetails from "../../features/catalog/ProductDetails";
-import ContactPage from "../../features/contact/ContactPage";
-import HomePage from "../../features/home/HomePage";
-import Header from "./Header";
+import { ShoppingCart } from "@mui/icons-material";
+import { AppBar, Badge, Box, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
+import { NavLink } from "react-router-dom";
 
-function App() {
-
-    const [darkMode, setDarkMode] = useState(false)
-    const paletteType = darkMode ? 'dark' : 'light';
-
-    const theme = createTheme({
-        palette: {
-            mode: paletteType,
-            background: {
-                default: paletteType === 'light' ? '#eaeaea' : '#121212'
-            }
-        }
-    });
-
-    function handleThemeChange() {
-        setDarkMode(!darkMode);
-    }
-    // <Catalog />
-
-    return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Header darkMode={darkMode} handleThemeChange={handleThemeChange} />
-            <Container>
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/catalog" element={<Catalog />} />
-                    <Route path="/catalog/:id" element={<ProductDetails />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/contact" element={<ContactPage />} />
-                </Routes>
-                {/* <Route path='/' component={HomePage}></Route> */}
-                {/* <Route path='/catalog' element={<Catalog />} />
-        <Route path='/catalog/:id' element={<ProductDetails />} />
-        <Route path='/about' element={<AboutPage />} />
-        <Route path='/contact' element={<ContactPage />} /> */}
-            </Container>
-        </ThemeProvider>
-    );
+interface Props {
+    darkMode: boolean;
+    handleThemeChange: () => void;
 }
 
+const midLinks = [
+    { title: 'catalog', path: '/catalog' },
+    { title: 'about', path: '/about' },
+    { title: 'contact', path: '/contact' }
+]
 
-export default App;
+const rightLinks = [
+    { title: 'login', path: '/login' },
+    { title: 'register', path: '/register' }
+]
+
+const navStyles = {
+    color: 'inherit',
+    textDecoration: 'none',
+    typography: 'h6',
+    '&:hover': {
+        color: 'grey.500'
+    },
+    '&.active': {
+        color: 'text.secondary'
+    }
+}
+
+export default function Header({ darkMode, handleThemeChange }: Props) {
+    return (
+        <AppBar position='static' sx={{ mb: 4 }}>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box display='flex' alignItems='center'>
+                    <Typography variant='h6' component={NavLink} to='/'
+                        sx={navStyles}>
+                        RE-STORE
+                    </Typography>
+                    <Switch checked={darkMode} onChange={handleThemeChange} />
+                </Box>
+                <List sx={{ display: 'flex' }}>
+                    {midLinks.map(({ title, path }) => (
+                        <ListItem
+                            component={NavLink}
+                            to={path}
+                            key={path}
+                            sx={navStyles}
+                        >
+                            {title.toUpperCase()}
+                        </ListItem>
+                    ))}
+                </List>
+                <Box display='flex' alignItems='center'>
+                    <IconButton size='large' sx={{ color: 'inherit' }}>
+                        <Badge badgeContent={4} color='secondary'>
+                            <ShoppingCart />
+                        </Badge>
+                    </IconButton>
+                    <List sx={{ display: 'flex' }}>
+                        {rightLinks.map(({ title, path }) => (
+                            <ListItem
+                                component={NavLink}
+                                to={path}
+                                key={path}
+                                sx={navStyles}
+                            >
+                                {title.toUpperCase()}
+                            </ListItem>
+                        ))}
+                    </List>
+                </Box>
+            </Toolbar>
+        </AppBar>
+    )
+}
